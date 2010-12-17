@@ -1,5 +1,6 @@
 /.actionScriptProperties
 /.project
+/.settings
 /src/site.swf
 /bin-debug/*
 /html-template/*
