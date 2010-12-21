@@ -1,8 +1,10 @@
 ﻿package
 {
-	import adriver.*
-	import adriver.events.*
+	import adriver.*;
+	import adriver.events.*;
+	
 	import fl.controls.TextArea;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -29,7 +31,9 @@
 				adriver: {
 					// your site id in adriver
 					// mandatory
-					sid: YOUR_SITE_ID_IN_ADRIVER
+					sid: 168077,
+					bid: 1023980,
+					ad: 259100
 				},
 				
 				// what social network to query for user data. 
@@ -40,10 +44,10 @@
 				social_network: "vkontakte",
 				
 				// api id
-				api_id: 5422,
+				api_id: 2030957,
 				
 				// vkontakte secret key of application, found in settings
-				api_secret: "oKSLmbER5H",
+				api_secret: "JNi8W1YXui",
 				
 				// when debugging vkontakte application locally, use test mode
 				api_test_mode: 1,
@@ -54,7 +58,7 @@
 		
 				// skip button settings
 				// actual button		
-				skip_button: sb,
+				skip_button: true,
 				// label
 				skip_button_label: "Skip",
 				// how quickly it can be activated (in seconds) 
@@ -62,7 +66,7 @@
 				
 				// advertisement duration limit in seconds
 				// it auto-skips the ad when timer is reached
-				max_duration: 0,
+				max_duration: 12,
 				
 				// user information
 				user: {
@@ -88,10 +92,8 @@
 				debug: debug
 			};
 			
-			// bring skip buttom to front
-			this.setChildIndex(sb, numChildren-1);
-			
 			if (parameters.social_network == 'vkontakte') {
+				
 				var vkontakte_wrapper: Object = Object(parent.parent); 
 				
 				if (!vkontakte_wrapper.application) {
@@ -100,12 +102,13 @@
 					parameters["flashVars"] = stage.loaderInfo.parameters as Object;
 
 					if (!parameters["flashVars"]["viewer_id"]) {
-						parameters["flashVars"]["viewer_id"] = 1;	
+						parameters["flashVars"]["viewer_id"] = "88984";	
 						parameters["flashVars"]["api_id"] = parameters.api_id;
 						parameters["flashVars"]["secret"] = parameters.api_secret;
 						parameters["flashVars"]["api_test_mode"] = parameters.api_test_mode;
 					}
 				} 
+				
 				else {
 					debug("APP: App has vkontakte wrapper. test mode = " + parameters.api_test_mode);
 					parameters["vkontakte_hasWrapper"] = true;
@@ -122,6 +125,18 @@
 		
 		private function load_user_params():void 
 		{
+			debug("FlashVars api id: " + parameters.flashVars.api_id);
+			debug("FlashVars secret: " + parameters.flashVars.api_secret);
+			debug("FlashVars viewer: " + parameters.flashVars.viewer_id);
+			debug("FlashVars test: " + parameters.flashVars.api_test_mode);
+			
+			debug('\nFINAL PARAMETERS:\n');
+			for (var i in parameters.flashVars)
+			{
+				debug(String(i+': '+parameters.flashVars[i]));
+			}
+			debug('\n');
+			
 			var module_vk:AdriverVK = new AdriverVK();
 			module_vk.init(parameters);
 			module_vk.commandGetProfiles(onUserInfoFull, onUserInfoEmpty);
@@ -144,7 +159,7 @@
 		{
 			show_dark_glass();
 			this.setChildIndex(mc_with_ad, this.numChildren-1);
-			this.setChildIndex(sb, this.numChildren-1);
+			
 			// initialising adriver module with external movie clip object and parameters
 			var ad:adriverLoader = new adriverLoader(mc_with_ad, parameters);
 			ad.addEventListener(AdriverEvent.STARTED, onAdStarted);
@@ -176,7 +191,6 @@
 			// remove ad container
 			removeChild(mc_with_ad);
 			// remove skip button
-			removeChild(sb);
 			remove_dark_glass();
 			// show app content
 			_content.x = 0;

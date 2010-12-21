@@ -14,10 +14,11 @@
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.events.SecurityErrorEvent;
+	import flash.external.ExternalInterface;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-	import flash.external.ExternalInterface;
 	import flash.system.Capabilities;
+	import flash.ui.Mouse;
 
 	public class adriverLoader extends Sprite
 	{
@@ -29,6 +30,7 @@
 		private var _mc:MovieClip;
 		private var parameters:Object;
 		private var obj:Object;
+		private var ad_cont:AdContainer;
 		
 		public function adriverLoader(mc:MovieClip, p:Object)
 		{			
@@ -108,35 +110,43 @@
 			parameters.eventUrl = obj.ar_event;
 
 			if (video_url || image_url || swf_url) {
+				
 				parameters.debug("LOADER: Init container: ");
 				
-				var ad_cont:AdContainer = new AdContainer(parameters, this);
+				ad_cont = new AdContainer(parameters, this);
 				this.addChild(ad_cont);
-				ad_cont.addEventListener(MouseEvent.CLICK, function(event:MouseEvent){
-					parameters.debug("LOADER: Ad clicked in loader ");
-					obj.makeClick();
-				});
-			
+				
+				ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
+				ad_cont.addEventListener(AdriverEvent.STARTED, sendPixels);
+				
+				
 				if (video_url) {
 					parameters.debug("LOADER: Trying to add a video: "+video_url);
 					ad_cont.showVideo(video_url);	
-				} 
-				else if (image_url) {
+				} else if (image_url) {
 					parameters.debug("LOADER: Trying to add an image: "+image_url);
 					ad_cont.loadBanner(image_url, 0, 0);
-				}			
-				else if (swf_url) {
+				} else if (swf_url) {
 					parameters.debug("LOADER: Trying to add a swf: "+swf_url);
-					ad_cont.loadBanner(swf_url + '?link1=' + obj.ar_cgihref, 0, 0)
+					ad_cont.loadBanner(swf_url + '?link1=' + obj.ar_cgihref, 0, 0, true)
 				}
-				ad_cont.addEventListener(AdriverEvent.STARTED, sendPixels);
-			}
-			else {
+				
+			} else {
 				parameters.debug("LOADER: Empty banner");				
 			}
 		}
 		
-		private function sendPixels() 
+		public function onAdClick(event:MouseEvent):void {
+			parameters.debug("LOADER: Ad clicked in loader ");
+			
+			if (ad_cont.isAdMount) {
+				ad_cont.clean_container();
+			}
+			
+			obj.makeClick();
+		}
+		
+		private function sendPixels():void
 		{			
 			if(obj.pixel1) {
 				parameters.debug("LOADER: pulling pixel 1");
