@@ -16,23 +16,43 @@ https://github.com/randuev/Adriver-Loader/
 
 // in your application, first add imports:
 
-    import adriver.*
-    import adriver.events.*
+    import adriver.*;
+    import adriver.events.*;
     
 // set up parameters:
 
     parameters = {
+        // user information, can be left blank if you use AdriverVK to load user info
+        user: {
+            // sex of user. 2 is male. 1 is female
+            // mandatory
+            sex: 2,
+            // birth date in "YYYY-MM-DD" format
+            // mandatory
+            bdate: "1917-01-09",
+            // unique user identificator
+            uid: 1,
+            // city name. lowercase
+            city_name: "st.petersburg",
+            // country name. lowercase
+            country_name: "russia"
+        },            
+            
         // adriver parameters
         adriver: {
             // your site id in adriver
             // mandatory
             sid: YOUR_SITE_ID_IN_ADRIVER
-        },       
+            // custom parameters to provide extra targeting information
+            custom: {
+                13: "9001"
+                }
+        },
         
         // what social network to query for user data. 
         // currently only vkontakte is supported. 
         // can be commented out if you don't want module to perform query or 
-        // want to supply information yourself 
+        // want to supply information yourself (fill user module)
         // 
         social_network: "vkontakte",
         
@@ -43,65 +63,59 @@ https://github.com/randuev/Adriver-Loader/
         api_secret: "oKSLmbER5H",
         
         // when debugging vkontakte application locally, use test mode
-        api_test_mode: 1,
-        
+        // api_test_mode: 1,
+    
         // type of advertisement 
         // currently only "pregame" 
         ad_type: "pregame",
-        
+    
         // skip button settings
-        // actual button		
-        skip_button: sb,
+        // either "true" to use standard button
+        // or points to actual Button in application        
+        // default: true, which means create vkontakte button
+        
+        skip_button: true,
+        // skip_button: mySkip,
+        
         // label
         skip_button_label: "Skip",
+        
         // how quickly it can be activated (in seconds) 
+        // default: 0 which means button is active straight away
         skip_button_timeout: 0,
         
         // advertisement duration limit in seconds
         // it auto-skips the ad when timer is reached
+        // default 0 which means no limit
         max_duration: 0,
-        
-        // user information
-        user: {
-            // sex of user. 2 is male. 1 is female
-            sex: 2,
-            // birth date in "YYYY-MM-DD" format
-            bdate: "1917-01-09",
-            // unique user identificator
-            uid: 1,
-            // city name. lowercase
-            city_name: "st.petersburg",
-            // country name. lowercase
-            country_name: "russia"
-        },
-        
+                        
         // style parameters
         style: {
             width: stage.width,
             height: stage.height
-        },				
-       
+        },                
+        
         // debug function
         debug: debug
-    };
-	
+        };
+    
 // when you are ready to display advertisement, initialize adriverLoader
 
-	var ad:adriverLoader = new adriverLoader(mc_with_ad, parameters);
-	
+    var ad:adriverLoader = new adriverLoader(mc_with_ad, parameters);
+    
 // you might want to catch adriver events (make sure these functions exist)
-	
-	ad.addEventListener(AdriverEvent.STARTED, onAdStarted);
-	ad.addEventListener(AdriverEvent.FINISHED, onAdFinished);
-	ad.addEventListener(AdriverEvent.FAILED, onAdFailed);
-	ad.addEventListener(AdriverEvent.LOADED, onAdLoaded);
-	ad.addEventListener(AdriverEvent.SKIPPED, onAdSkipped);
-	ad.addEventListener(AdriverEvent.PROGRESS, onAdProgress);
-	ad.addEventListener(AdriverEvent.LIMITED, onAdLimited);
+    
+    ad.addEventListener(AdriverEvent.STARTED, onAdStarted);
+    ad.addEventListener(AdriverEvent.FINISHED, onAdFinished);
+    ad.addEventListener(AdriverEvent.FAILED, onAdFailed);
+    ad.addEventListener(AdriverEvent.LOADED, onAdLoaded);
+    ad.addEventListener(AdriverEvent.SKIPPED, onAdSkipped);
+    ad.addEventListener(AdriverEvent.PROGRESS, onAdProgress);
+    ad.addEventListener(AdriverEvent.LIMITED, onAdLimited);
 
 // load and display advertisement
 
-	ad.loadAd();
+    ad.loadAd();
 
 * Please see site.as and site.fla for compelte sample application
 
