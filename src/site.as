@@ -26,53 +26,13 @@
 			init_debbuger();
 			var YOUR_SITE_ID_IN_ADRIVER:Number = 103134;
 			
-			parameters = {
-				// adriver parameters
-				adriver: {
-					// your site id in adriver
-					// mandatory
-					sid: 168077,
-					bid: 1023980,
-					ad: 259100
-				},
-				
-				// what social network to query for user data. 
-				// currently only vkontakte is supported. 
-				// can be commented out if you don't want module to perform query or 
-				// want to supply information yourself 
-				// 
-				social_network: "vkontakte",
-				
-				// api id
-				api_id: 2030957,
-				
-				// vkontakte secret key of application, found in settings
-				api_secret: "JNi8W1YXui",
-				
-				// when debugging vkontakte application locally, use test mode
-				api_test_mode: 1,
-		
-				// type of advertisement 
-				// currently only "pregame" 
-				ad_type: "pregame",
-		
-				// skip button settings
-				// actual button		
-				skip_button: true,
-				// label
-				skip_button_label: "Skip",
-				// how quickly it can be activated (in seconds) 
-				skip_button_timeout: 0,
-				
-				// advertisement duration limit in seconds
-				// it auto-skips the ad when timer is reached
-				max_duration: 12,
-				
-				// user information
-				user: {
+			// user information must be provided if you want to target
+			var user_info:Object = {
 					// sex of user. 2 is male. 1 is female
+					// mandatory
 					sex: 2,
 					// birth date in "YYYY-MM-DD" format
+					// mandatory
 					bdate: "1917-01-09",
 					// unique user identificator
 					uid: 1,
@@ -80,8 +40,65 @@
 					city_name: "st.petersburg",
 					// country name. lowercase
 					country_name: "russia"
+				};	
+				
+			parameters = {
+				// user information, can be left blank if you use AdriverVK to load user info
+				user: user_info,			
+				
+				// adriver parameters
+				adriver: {
+					// your site id in adriver
+					// mandatory
+					sid: YOUR_SITE_ID_IN_ADRIVER
+					// custom parameters to provide extra targeting information
+//					custom: {
+//						10: user_info.city_name,
+//						11: user_info.country_name,
+//						12: user_info.uid
+//					}
 				},
 				
+				// what social network to query for user data. 
+				// currently only vkontakte is supported. 
+				// can be commented out if you don't want module to perform query or 
+				// want to supply information yourself (fill user module)
+				// 
+				social_network: "vkontakte",
+				
+				// api id
+				api_id: 5422,
+				
+				// vkontakte secret key of application, found in settings
+				api_secret: "oKSLmbER5H",
+				
+				// when debugging vkontakte application locally, use test mode
+				// api_test_mode: 1,
+		
+				// type of advertisement 
+				// currently only "pregame" 
+				ad_type: "pregame",
+		
+				// skip button settings
+				// either "true" to use standard button
+				// or points to actual Button in application		
+				// default: true, which means create vkontakte button
+				
+				skip_button: true,
+				// skip_button: mySkip,
+				
+				// label
+				skip_button_label: "Skip",
+				
+				// how quickly it can be activated (in seconds) 
+				// default: 0 which means button is active straight away
+				skip_button_timeout: 0,
+				
+				// advertisement duration limit in seconds
+				// it auto-skips the ad when timer is reached
+				// default 0 which means no limit
+				max_duration: 0,
+								
 				// style parameters
 				style: {
 					width: stage.width,
@@ -144,8 +161,20 @@
 		
 		private function onUserInfoFull(obj:Object):void 
 		{	
-			debug("APP: Receive VK user info");	
+			debug("APP: Received VK user info");	
 			parameters.user = obj;
+			
+			// here, if you want to provide specific user variables, you can add them into 
+			// custom dictionary
+			
+			// consult adriver before modifying
+			
+			parameters.adriver.custom = {
+				10: parameters.user.city_name,
+				11: parameters.user.country_name,
+				12: parameters.user.uid
+			}
+			
 			load_adriver();
 		}
 		

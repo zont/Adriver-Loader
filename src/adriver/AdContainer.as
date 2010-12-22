@@ -27,6 +27,8 @@
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
+	// if you don't want to use vkontakte libraries, comment it out and 
+	// in parameters, supply an external real Button
 	import vkontakte.vk.ui.VKButton;
 	
 	public class AdContainer extends MovieClip
@@ -61,7 +63,7 @@
 		
 		private var loaders:Object = [];
 		
-		private var skip_button:VKButton;
+		private var skip_button;
 		
 		public var isAdMount:Boolean;
 		
@@ -132,31 +134,40 @@
 			isAdMount = false;
 		}
 		
-		private function prepare_container(aWidth:int, aHeight:int):void {
-			
-			if (parameters.skip_button) {
-				
+		private function prepare_container(aWidth:int, aHeight:int):void 
+		{			
+			if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
+				parameters.debug("AD: making our own VKButton");
+
+				// can be commented out if you don't want vkbuttons
 				skip_button = new VKButton(parameters.skip_button_label);
+				skip_button.x = aWidth + skip_button.width/2;
 				
+				//skip_button.x = aWidth - skip_button.width;
+				//skip_button.y = aHeight - skip_button.height;
 				
-				skip_button.x = aWidth - skip_button.width;
-				skip_button.y = aHeight - skip_button.height;
-				
-				addChild(skip_button);
-				
-				skip_button.addEventListener(MouseEvent.CLICK, onSkipClick);
-				
+				addChild(skip_button);				
+				skip_button.addEventListener(MouseEvent.CLICK, onSkipClick);				
+				setChildIndex(skip_button, numChildren-1);
+			}
+			else if (typeof(parameters.skip_button) == "object") {
+				// our own skip button
+				parameters.debug("AD: using external Button");				
+				skip_button = parameters.skip_button;				
+				addChild(skip_button);				
+				skip_button.addEventListener(MouseEvent.CLICK, onSkipClick);		
 				setChildIndex(skip_button, numChildren-1);
 			}
 			
 			if (parameters.skip_button_timeout) {
+				parameters.debug("AD: skip button has timeout");
 				parameters.skip_button.enabled = false;
 				skip_timer = new Timer(parameters.skip_button_timeout*1000, 1);
 				skip_timer.addEventListener(TimerEvent.TIMER, onSkipTimer);
 				skip_timer.start();				
 			}
 			
-			if( parameters.max_duration > 0) {
+			if (parameters.max_duration > 0) {
 				show_duration();
 			}
 			
@@ -166,7 +177,6 @@
 		private function onSkipClick(event:MouseEvent):void
 		{
 			removeEventListener(MouseEvent.CLICK, _parent.onAdClick);
-			
 			parameters.debug("AD: Skip button clicked in container");
 			clean_container();
 			sendEvent(AdriverEvent.SKIPPED);
@@ -183,9 +193,7 @@
 			loader.x = x;
 			loader.y = y;
 			addChild(loader);
-			
 			loaders.push(loader);
-			
 			sendEvent(AdriverEvent.STARTED);
 		}
 		
@@ -199,11 +207,8 @@
 			video.attachNetStream(stream);
 			stream.play(_video_url);
 			addChild(video);
-			
-			loaders.push(video);
-			
-			parameters.debug("AD: ..video size: "+video.width+"x"+video.height);
-			
+			loaders.push(video);			
+			parameters.debug("AD: ..video size: "+video.width+"x"+video.height);			
 			prepare_container(video.width, video.height);
 		}
 		

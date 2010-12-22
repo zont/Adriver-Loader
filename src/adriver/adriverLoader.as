@@ -22,7 +22,7 @@
 
 	public class adriverLoader extends Sprite
 	{
-		private const VERSION:String = "1.0";		
+		private const VERSION:String = "1.1";		
 		private const ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -62,9 +62,12 @@
 			custom_list[254] = Capabilities.version;
 			custom_list[100] = parameters.user.sex ? parameters.user.sex == 2 ? 'm' : 'f' : null;
 			custom_list[101] = now - (parseInt(('' + parameters.user.bdate).split('.').pop()) || now);
-			custom_list[10] = parameters.user.city_name;
-			custom_list[11] = parameters.user.country_name;
-			custom_list[12] = parameters.user.uid;
+								
+			// add extra stuff from parameters object
+			for (i in parameters.adriver.custom) {
+				custom_list[i] = parameters.adriver.custom[i];
+			}
+
 			param_custom = get_right_custom(custom_list);
 			
 			if (!parameters.adriver["sid"])
