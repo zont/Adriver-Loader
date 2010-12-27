@@ -22,7 +22,7 @@
 
 	public class adriverLoader extends Sprite
 	{
-		private const VERSION:String = "1.1";		
+		private const VERSION:String = "1.11";		
 		private const ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -76,7 +76,8 @@
 			// build adriver params
 			var b = [], i=0, adriverParms="";
 			
-			for (i in parameters.adriver) {
+			for (i in parameters.adriver) {				
+				if(typeof(parameters.adriver[i]) == 'object') continue;
 				b.push(i + '=' + escape(parameters.adriver[i]));
 			}
 			
