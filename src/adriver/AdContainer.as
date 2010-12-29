@@ -227,9 +227,10 @@
 		{
 			if (parameters.eventUrl) {
 				parameters.debug("AD: Logging adriver event: " +event);
-				//var request:URLRequest = new URLRequest(parameters.eventUrl+AdriverEvent.EventMap[event]);
-//				var loader:URLLoader = new URLLoader();
-//				loader.load(request);				
+				trace(parameters.eventUrl+AdriverEvent.getEventID(event));
+				var request:URLRequest = new URLRequest(parameters.eventUrl+AdriverEvent.getEventID(event));
+				var loader:URLLoader = new URLLoader();
+				loader.load(request);				
 			}
 		}
 		

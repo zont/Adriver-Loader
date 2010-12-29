@@ -19,10 +19,11 @@
 			super(type);
 		}
 		
-		public static function getEventID(type:String):String {
-			
+		public static function getEventID(type:String):String 
+		{
 			var	eventToNumber:Dictionary = new Dictionary();
-			eventToNumber[AdriverEvent.STARTED] = 0;
+			
+			eventToNumber[AdriverEvent.STARTED] = "0";
 			eventToNumber[AdriverEvent.FINISHED] = 1;
 			eventToNumber[AdriverEvent.SKIPPED] = 2;
 			eventToNumber[AdriverEvent.LIMITED] = 3;
@@ -35,7 +36,8 @@
 			return String(255);
 		} 
 			
-		public override  function clone():Event {
+		public override function clone():Event 
+		{
 			return new AdriverEvent(type);
 		}
 	}
