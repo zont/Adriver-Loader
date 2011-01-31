@@ -1,4 +1,4 @@
-Adriver-Loader (as3) version 1.1
+Adriver-Loader (as3) version 1.5
 https://github.com/randuev/Adriver-Loader/
 
 * supports:
@@ -40,11 +40,18 @@ https://github.com/randuev/Adriver-Loader/
             
         // adriver parameters
         adriver: {
+            // user info if specified manually
+            user: user_info,
             // your site id in adriver
             // mandatory
             sid: YOUR_SITE_ID_IN_ADRIVER
             // custom parameters to provide extra targeting information
             custom: {
+                // these constants allow specification of vkontakte demographics
+                10: adriverLoaderDefaults.CITY_NAME,
+                11: adriverLoaderDefaults.COUNTRY_NAME,
+                12: adriverLoaderDefaults.UID,
+                // you can put anything else in custom
                 13: "9001"
                 }
         },
@@ -55,12 +62,6 @@ https://github.com/randuev/Adriver-Loader/
         // want to supply information yourself (fill user module)
         // 
         social_network: "vkontakte",
-        
-        // api id
-        api_id: 5422,
-        
-        // vkontakte secret key of application, found in settings
-        api_secret: "oKSLmbER5H",
         
         // when debugging vkontakte application locally, use test mode
         // api_test_mode: 1,
@@ -106,6 +107,7 @@ https://github.com/randuev/Adriver-Loader/
 // you might want to catch adriver events (make sure these functions exist)
     
     ad.addEventListener(AdriverEvent.STARTED, onAdStarted);
+    ad.addEventListener(AdriverEvent.CLICKED, onAdClicked);			
     ad.addEventListener(AdriverEvent.FINISHED, onAdFinished);
     ad.addEventListener(AdriverEvent.FAILED, onAdFailed);
     ad.addEventListener(AdriverEvent.LOADED, onAdLoaded);
