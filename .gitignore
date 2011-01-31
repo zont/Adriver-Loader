@@ -2,5 +2,6 @@
 /.project
 /.settings
 /src/site.swf
+/src/.flashProjectProperties
 /bin-debug/*
 /html-template/*

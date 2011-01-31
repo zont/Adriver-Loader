@@ -50,13 +50,21 @@
 				adriver: {
 					// your site id in adriver
 					// mandatory
-					sid: YOUR_SITE_ID_IN_ADRIVER
+					sid: YOUR_SITE_ID_IN_ADRIVER,
+
 					// custom parameters to provide extra targeting information
 //					custom: {
 //						10: user_info.city_name,
 //						11: user_info.country_name,
 //						12: user_info.uid
 //					}
+
+					// or we can use information from vkontakte 
+					custom: {
+						10: adriverLoaderDefaults.CITY_NAME,
+						11: adriverLoaderDefaults.COUNTRY_NAME,
+						12: adriverLoaderDefaults.UID
+					}
 				},
 				
 				// what social network to query for user data. 
@@ -65,13 +73,7 @@
 				// want to supply information yourself (fill user module)
 				// 
 				social_network: "vkontakte",
-				
-				// api id
-				api_id: 5422,
-				
-				// vkontakte secret key of application, found in settings
-				api_secret: "oKSLmbER5H",
-				
+						
 				// when debugging vkontakte application locally, use test mode
 				// api_test_mode: 1,
 		
@@ -83,7 +85,8 @@
 				// either "true" to use standard button
 				// or points to actual Button in application		
 				// default: true, which means create vkontakte button
-				
+
+				// skip_button: false,
 				skip_button: true,
 				// skip_button: mySkip,
 				
@@ -108,90 +111,14 @@
 				// debug function
 				debug: debug
 			};
-			
-			if (parameters.social_network == 'vkontakte') {
-				
-				var vkontakte_wrapper: Object = Object(parent.parent); 
-				
-				if (!vkontakte_wrapper.application) {
-					debug("APP: App has no vkontakte wrapper. test mode = " + parameters.api_test_mode);
-					parameters["vkontakte_hasWrapper"] = false;
-					parameters["flashVars"] = stage.loaderInfo.parameters as Object;
-
-					if (!parameters["flashVars"]["viewer_id"]) {
-						parameters["flashVars"]["viewer_id"] = "88984";	
-						parameters["flashVars"]["api_id"] = parameters.api_id;
-						parameters["flashVars"]["secret"] = parameters.api_secret;
-						parameters["flashVars"]["api_test_mode"] = parameters.api_test_mode;
-					}
-				} 
-				
-				else {
-					debug("APP: App has vkontakte wrapper. test mode = " + parameters.api_test_mode);
-					parameters["vkontakte_hasWrapper"] = true;
-					parameters["vkontakte_wrapper"] = vkontakte_wrapper;
-					parameters["flashVars"] = vkontakte_wrapper.application.parameters;
-				}
-				
-				load_user_params();
-			}
-			else {
-				load_adriver();
-			}
-		}
-		
-		private function load_user_params():void 
-		{
-			debug("FlashVars api id: " + parameters.flashVars.api_id);
-			debug("FlashVars secret: " + parameters.flashVars.api_secret);
-			debug("FlashVars viewer: " + parameters.flashVars.viewer_id);
-			debug("FlashVars test: " + parameters.flashVars.api_test_mode);
-			
-			debug('\nFINAL PARAMETERS:\n');
-			for (var i in parameters.flashVars)
-			{
-				debug(String(i+': '+parameters.flashVars[i]));
-			}
-			debug('\n');
-			
-			var module_vk:AdriverVK = new AdriverVK();
-			module_vk.init(parameters);
-			module_vk.commandGetProfiles(onUserInfoFull, onUserInfoEmpty);
-		}
-		
-		private function onUserInfoFull(obj:Object):void 
-		{	
-			debug("APP: Received VK user info");	
-			parameters.user = obj;
-			
-			// here, if you want to provide specific user variables, you can add them into 
-			// custom dictionary
-			
-			// consult adriver before modifying
-			
-			parameters.adriver.custom = {
-				10: parameters.user.city_name,
-				11: parameters.user.country_name,
-				12: parameters.user.uid
-			}
-			
-			load_adriver();
-		}
-		
-		private function onUserInfoEmpty():void 
-		{
-			debug("APP: Did not receive VK user info");	
-			load_adriver();
-		}
-		
-		private function load_adriver():void 
-		{
+	
 			show_dark_glass();
 			this.setChildIndex(mc_with_ad, this.numChildren-1);
 			
 			// initialising adriver module with external movie clip object and parameters
 			var ad:adriverLoader = new adriverLoader(mc_with_ad, parameters);
 			ad.addEventListener(AdriverEvent.STARTED, onAdStarted);
+			ad.addEventListener(AdriverEvent.CLICKED, onAdClicked);			
 			ad.addEventListener(AdriverEvent.FINISHED, onAdFinished);
 			ad.addEventListener(AdriverEvent.FAILED, onAdFailed);
 			ad.addEventListener(AdriverEvent.LOADED, onAdLoaded);
@@ -199,6 +126,7 @@
 			ad.addEventListener(AdriverEvent.PROGRESS, onAdProgress);
 			ad.addEventListener(AdriverEvent.LIMITED, onAdLimited);
 			ad.loadAd();
+			
 		}
 		
 		// events
@@ -206,6 +134,12 @@
 		private function onAdStarted(event:Event):void 
 		{
 			debug("APP: Ad started");
+		}
+		
+		private function onAdClicked(event:Event):void 
+		{
+			debug("APP: Ad clicked");
+			onAdFinished(event);
 		}
 		
 		private function onAdLimited(event:Event):void 
