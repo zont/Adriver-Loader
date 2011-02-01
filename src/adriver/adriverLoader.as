@@ -21,7 +21,7 @@
 	import flash.ui.Mouse;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.5";
+		private const VERSION:String = "1.51";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -119,7 +119,7 @@
 
 			custom_list[255] = this.VERSION;
 			custom_list[254] = Capabilities.version;
-			custom_list[100] = parameters.user.sex ? (parameters.user.sex == 2 ? 'm' : 'f') : null;
+			custom_list[100] = parameters.user.sex ? (parameters.user.sex == 2 ? 'm' : parameters.user.sex == 1 ?'f': null) : null;
 
 			if (parameters.user.bdate && parameters.user.bdate.split('.').length == 3) {
 				var n = new Date(),
