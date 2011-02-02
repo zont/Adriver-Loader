@@ -21,7 +21,7 @@
 	import flash.ui.Mouse;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.51";
+		private const VERSION:String = "1.6";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -150,6 +150,7 @@
 
 			if (param_custom) {
 				adriverParms += param_custom;
+				parameters.wholecustom = param_custom;
 			}
 
 			//parameters.adriver_url = ADRIVER_URL + adriverParms;
@@ -169,10 +170,14 @@
 		private function onScenarioXMLLoad(event:AdriverXMLEvent):void {
 
 			obj = event.obj;
+						
 			var video_url:String = obj.flv;
 			var image_url:String = obj.image;
 			var swf_url:String = obj.swf;
-			parameters.eventUrl = obj.ar_event;
+			
+			// custom passing
+			parameters.eventUrl = obj.ar_event + (parameters.wholecustom || '') + "&type=";			
+			obj.ar_cgihref += parameters.wholecustom || '';
 
 			if (video_url || image_url || swf_url) {
 
@@ -195,7 +200,7 @@
 				}
 				else if (swf_url) {
 					parameters.debug("LOADER: Trying to add a swf: " + swf_url + '?link1=' + escape(obj.ar_cgihref));
-					ad_cont.loadBanner(swf_url + '?link1=' + escape(obj.ar_cgihref), 0, 0, true)
+					ad_cont.loadBanner(swf_url + '?link1=' + escape(obj.ar_cgihref + '&rleurl='), 0, 0, true)
 				}
 
 			} else {

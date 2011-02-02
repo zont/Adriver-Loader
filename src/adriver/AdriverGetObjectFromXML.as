@@ -117,8 +117,7 @@
 								+ "&ad=" + x.child('ar_adid')
 								+ "&nid=" + x.child('ar_netid')
 								+ "&rnd=" + x.child('ar_rnd')
-								+ "&sliceid=" + x.child('ar_sliceid')
-								+ "&type=";
+								+ "&sliceid=" + x.child('ar_sliceid');
 	
 				var second_url:String = this.ar_comppath + this.ar_name;
 				var loader = new URLLoader();
