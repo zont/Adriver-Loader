@@ -309,6 +309,7 @@
 					parameters.debug("AD: ..video stream connect");
 					connectStream();
 					sendEvent(AdriverEvent.STARTED);
+					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));					
 					break;
 				case "NetStream.Play.StreamNotFound":
 					parameters.debug("AD: ..Unable to locate video: " + _video_url);
