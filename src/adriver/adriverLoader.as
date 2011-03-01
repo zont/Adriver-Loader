@@ -18,7 +18,6 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
-	import flash.ui.Mouse;
 
 	public class adriverLoader extends Sprite {
 		private const VERSION:String = "1.61";
@@ -201,7 +200,8 @@
 				else if (swf_url) {
 					if (parameters.catch_clicks) {
 						ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
-						}
+						ad_cont.mouseChildren = false;
+					}
 					parameters.debug("LOADER: Trying to add a swf: " + swf_url + '?link1=' + escape(obj.ar_cgihref));
 					ad_cont.loadBanner(swf_url + '?link1=' + escape(obj.ar_cgihref + '&rleurl='), 0, 0, true)
 				}

@@ -22,8 +22,6 @@
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.text.TextField;
-	import flash.ui.Mouse;
-	import flash.ui.MouseCursor;
 	import flash.utils.Timer;
 
 	// if you don't want to use vkontakte libraries, comment it out and
@@ -70,15 +68,7 @@
 			parameters = given_parameters;
 			_parent = mc;
 			
-			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-		}
-		
-		private function onMouseOver(event:Event):void {
-			Mouse.cursor = flash.ui.MouseCursor.BUTTON;
-		}
-		private function onMouseOut(event:Event):void {
-			Mouse.cursor = flash.ui.MouseCursor.ARROW;
+			buttonMode = true;
 		}
 
 		private function onSkipTimer(event:TimerEvent):void {
@@ -243,10 +233,15 @@
 		private function sendEvent(event:String):void
 		{
 			if (parameters.eventUrl) {
+				var temp = function(e:Event):void {
+					trace(e + '\n');
+				}
 				parameters.debug("AD: Logging adriver event: " +event);
 				trace(parameters.eventUrl+AdriverEvent.getEventID(event));
 				var request:URLRequest = new URLRequest(parameters.eventUrl+AdriverEvent.getEventID(event));
 				var loader:URLLoader = new URLLoader();
+				loader.addEventListener(IOErrorEvent.IO_ERROR, temp);
+				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, temp);
 				loader.load(request);
 			}
 		}
