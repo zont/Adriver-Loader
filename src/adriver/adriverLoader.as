@@ -208,6 +208,7 @@
 
 			} else {
 				parameters.debug("LOADER: Empty banner");
+				this.dispatchEvent(new AdriverEvent(AdriverEvent.FAILED));
 			}
 		}
 
