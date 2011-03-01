@@ -20,7 +20,7 @@
 	import flash.system.Capabilities;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.61";
+		private const VERSION:String = "1.7";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
