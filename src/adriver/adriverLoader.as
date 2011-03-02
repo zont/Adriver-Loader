@@ -20,7 +20,7 @@
 	import flash.system.Capabilities;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.7";
+		private const VERSION:String = "1.8";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -185,7 +185,7 @@
 				ad_cont = new AdContainer(parameters, this);
 				this.addChild(ad_cont);
 
-				ad_cont.addEventListener(AdriverEvent.STARTED, sendPixels);
+				ad_cont.addEventListener(AdriverEvent.LOADED, sendPixels);
 
 				if (video_url) {
 					ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
@@ -224,20 +224,28 @@
 			obj.makeClick();
 		}
 
-		private function sendPixels():void
+		private function sendPixels(event:AdriverEvent):void
 		{
-			if(obj.pixel1) {
-				parameters.debug("LOADER: pulling pixel 1");
+			parameters.debug("LOADER: third party pixels");
 
+			var temp = function(e:Event):void {
+				trace(e + '\n');
+			}
+				
+			if(obj.pixel1) {
+				parameters.debug("LOADER: loading pixel 1");
+				
 				var loader:Loader = new Loader();
+				loader.addEventListener(IOErrorEvent.IO_ERROR, temp);
 				var request:URLRequest = new URLRequest(obj.pixel1);
 				loader.load(request);
 			}
 
 			if(obj.pixel2) {
-				parameters.debug("LOADER: pulling pixel 2");
+				parameters.debug("LOADER: loading pixel 2");
 
 				var loader2:Loader = new Loader();
+				loader2.addEventListener(IOErrorEvent.IO_ERROR, temp);
 				var request2:URLRequest = new URLRequest(obj.pixel2);
 				loader2.load(request2);
 			}

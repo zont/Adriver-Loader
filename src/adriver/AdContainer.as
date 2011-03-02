@@ -202,6 +202,7 @@
 			addChild(loader);
 			loaders.push(loader);
 			sendEvent(AdriverEvent.STARTED);
+			this.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 		}
 
 		private function connectStream():void
@@ -304,6 +305,7 @@
 					parameters.debug("AD: ..video stream connect");
 					connectStream();
 					sendEvent(AdriverEvent.STARTED);
+					this.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));					
 					break;
 				case "NetStream.Play.StreamNotFound":
