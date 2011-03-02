@@ -199,6 +199,7 @@
 				}
 				else if (swf_url) {
 					if (parameters.catch_clicks) {
+						parameters.debug("LOADER: Won't pass clicks to flash banner");
 						ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
 						ad_cont.mouseChildren = false;
 					}

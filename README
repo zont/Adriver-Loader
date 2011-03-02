@@ -9,6 +9,7 @@ https://github.com/randuev/Adriver-Loader/
     skip button
     callbacks for all events
     duration limit
+    third party pixel audit
 
 * how to use:
 
@@ -87,8 +88,13 @@ https://github.com/randuev/Adriver-Loader/
         
         // advertisement duration limit in seconds
         // it auto-skips the ad when timer is reached
-        // default 0 which means no limit
+        // default: 0, which means no limit
         max_duration: 0,
+
+        // if you want to capture clicks before they are passed to flash banner, set it to true
+        // default: false, which means let banner handle it's clicks
+        
+        catch_clicks: false,
                         
         // style parameters
         style: {

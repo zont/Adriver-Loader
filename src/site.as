@@ -101,7 +101,11 @@
 				// it auto-skips the ad when timer is reached
 				// default 0 which means no limit
 				max_duration: 0,
-								
+
+				// if you want to capture clicks before they are passed to flash banner, set it to true
+				// default: false, which means let banner handle it's clicks		
+				catch_clicks: false,
+
 				// style parameters
 				style: {
 					width: stage.width,
@@ -199,6 +203,7 @@
 		private function debug(text:String):void 
 		{
 			debugger.text += text + "\n";
+			trace(text);
 		}
 		
 		private function show_dark_glass():void 
