@@ -134,13 +134,16 @@
 
 		private function prepare_container(aWidth:int, aHeight:int):void
 		{
+			this.width = aWidth;
+			this.height = aHeight;
+
 			if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
 				parameters.debug("AD: making our own VKButton");
 
 				// can be commented out if you don't want vkbuttons
 				skip_button = new VKButton(parameters.skip_button_label);
-				skip_button.x = aWidth + skip_button.width/2;
-
+				skip_button.x = (aWidth + skip_button.width/2)/this.scaleX;
+				
 				//skip_button.x = aWidth - skip_button.width;
 				//skip_button.y = aHeight - skip_button.height;
 
@@ -186,7 +189,9 @@
 			sendEvent(AdriverEvent.SKIPPED);
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.SKIPPED));
 		}
-		private function onSkipClickEmpty(event:MouseEvent):void {
+		
+		private function onSkipClickEmpty(event:MouseEvent):void 
+		{
 			event.stopPropagation();
 		}
 
@@ -209,6 +214,10 @@
 		{
 			stream = new NetStream(connection);
 			stream.client = new Object();
+			stream.client.onMetaData = function(obj) {
+				parameters.debug("AD: video size: width="+obj.width + ", height="+obj.height);
+				prepare_container(obj.width, obj.height);
+			}
 			stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
 			var video:Video = new Video();
@@ -216,8 +225,6 @@
 			stream.play(_video_url);
 			addChild(video);
 			loaders.push(video);
-			parameters.debug("AD: ..video size: "+video.width+"x"+video.height);
-			prepare_container(video.width, video.height);
 		}
 
 		private function configureListeners(dispatcher:IEventDispatcher):void
