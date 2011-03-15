@@ -217,6 +217,8 @@
 			stream.client.onMetaData = function(obj) {
 				parameters.debug("AD: video size: width="+obj.width + ", height="+obj.height);
 				prepare_container(obj.width, obj.height);
+				dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
+				_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 			}
 			stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
@@ -312,8 +314,6 @@
 					parameters.debug("AD: ..video stream connect");
 					connectStream();
 					sendEvent(AdriverEvent.STARTED);
-					this.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
-					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));					
 					break;
 				case "NetStream.Play.StreamNotFound":
 					parameters.debug("AD: ..Unable to locate video: " + _video_url);
