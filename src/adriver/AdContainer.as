@@ -81,9 +81,11 @@
 			skip_button.enabled = true;
 		}
 
-		private function show_duration():void
+		private function limit_duration():void
 		{
-			skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration+")";
+			if (skip_button) {		 
+			    skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration+")";
+			}
 
 			duration_timer = new Timer(1000, parameters.max_duration);
 			duration_timer.addEventListener(TimerEvent.TIMER, onTick);
@@ -94,7 +96,9 @@
 		private function onTick(event:TimerEvent):void
 		{
 			var i:int = parameters.max_duration - event.target.currentCount;
-			skip_button.label = parameters.skip_button_label + " (" + i+")";
+			if (skip_button) {
+			   	skip_button.label = parameters.skip_button_label + " (" + i+")";
+			}		
 		}
 
 		private function onAdTimerComplete(event:TimerEvent):void
@@ -183,7 +187,7 @@
 				setChildIndex(skip_button, numChildren-1);
 			}
 			
-			if (skip_button){
+			if (skip_button) {
 				if (parameters.skip_button_timeout) {
 					parameters.debug("AD: skip button has timeout");
 					skip_button.enabled = false;
@@ -196,12 +200,12 @@
 				else{
 					skip_button.addEventListener(MouseEvent.CLICK, onSkipClick);
 				}
-				
-				if (parameters.max_duration > 0) {
-					show_duration();
-				}
 			}
 
+			if (parameters.max_duration > 0) {
+				limit_duration();
+			}
+			
 			isAdMount = true;
 		}
 		

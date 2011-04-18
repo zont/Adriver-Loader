@@ -21,7 +21,7 @@
 	import vkontakte.vk.ui.VKButton;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.9";
+		private const VERSION:String = "1.95";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
