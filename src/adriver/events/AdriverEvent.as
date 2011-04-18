@@ -10,7 +10,7 @@
 		public static const FINISHED:String = "finished";
 		public static const LIMITED:String = "limited";
 		public static const FAILED:String = "failed";
-		public static const LOADED:String = "loaded;"
+		public static const LOADED:String = "loaded";
 		public static const SKIPPED:String = "skipped";
 		public static const PROGRESS:String = "progress";
 		
@@ -23,13 +23,13 @@
 		{
 			var	eventToNumber:Dictionary = new Dictionary();
 			
-			eventToNumber[AdriverEvent.STARTED] = "0";
+			eventToNumber[AdriverEvent.STARTED] = 0;
 			eventToNumber[AdriverEvent.FINISHED] = 1;
 			eventToNumber[AdriverEvent.SKIPPED] = 2;
 			eventToNumber[AdriverEvent.LIMITED] = 3;
 			eventToNumber[AdriverEvent.FAILED] = 9;
 			
-			if (eventToNumber[type]) {
+			if (eventToNumber[type]>=0) {
 				return String(eventToNumber[type]);
 			} 
 			
