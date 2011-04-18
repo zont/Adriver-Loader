@@ -5,6 +5,8 @@
 	import flash.display.DisplayObject;
 	import flash.display.Loader;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.AsyncErrorEvent;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
@@ -57,11 +59,13 @@
 		private var skip_timer:Timer;
 
 		private var loaders:Object = [];
-
-		private var skip_button;
-
+		private var wnd:Sprite;
 		public var isAdMount:Boolean;
-
+		public var skip_button;
+		private var iSWF:Boolean = false;
+		private var video:Video;
+		private var loader:Loader;
+		
 		public function AdContainer(given_parameters:Object, mc)
 		{
 			super();
@@ -131,12 +135,22 @@
 
 			isAdMount = false;
 		}
-
-		private function prepare_container(aWidth:int, aHeight:int):void
+		
+		private function prepare_container(aWidth:int, aHeight:int, iVideo=false):void
 		{
-			this.width = aWidth;
-			this.height = aHeight;
-
+			if (!iVideo){
+				this.width = aWidth;
+				this.height = aHeight;
+			}
+			
+			if (iSWF) {
+				var rect:Shape = new Shape(); 
+				rect.graphics.beginFill(0xFFFFFF); 
+				rect.graphics.drawRect(0, 0, aWidth, aHeight); 
+				addChild(rect); 
+				loader.mask = rect;
+			}
+			
 			if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
 				parameters.debug("AD: making our own VKButton");
 
@@ -155,10 +169,20 @@
 				parameters.debug("AD: using external Button");
 				skip_button = parameters.skip_button;
 				
+				trace("Csize", this.width, this.height)
+				
+				skip_button.x = this.width/2 - skip_button.width/2;
+				skip_button.y = this.height + 10;
+				
+				
+				if (skip_button.y > (parameters.style.height - skip_button.height - 10)) {
+					skip_button.y = parameters.style.height - skip_button.height - 10;
+				}
+				
 				addChild(skip_button);
 				setChildIndex(skip_button, numChildren-1);
 			}
-
+			
 			if (skip_button){
 				if (parameters.skip_button_timeout) {
 					parameters.debug("AD: skip button has timeout");
@@ -180,30 +204,21 @@
 
 			isAdMount = true;
 		}
-
-		private function onSkipClick(event:MouseEvent):void
-		{
-			removeEventListener(MouseEvent.CLICK, _parent.onAdClick);
-			parameters.debug("AD: Skip button clicked in container");
-			clean_container();
-			sendEvent(AdriverEvent.SKIPPED);
-			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.SKIPPED));
-		}
 		
-		private function onSkipClickEmpty(event:MouseEvent):void 
-		{
-			event.stopPropagation();
-		}
-
+		
+		
+		
+		
 		public function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
 		{
+			iSWF = isSWF;
+			
 			parameters.debug("AD: Loading banner");
-			var loader:Loader = new Loader();
+			loader = new Loader();
+			
 			configureListeners(loader.contentLoaderInfo);
 			var request:URLRequest = new URLRequest(url);
 			loader.load(request);
-			loader.x = x;
-			loader.y = y;
 			addChild(loader);
 			loaders.push(loader);
 			sendEvent(AdriverEvent.STARTED);
@@ -216,19 +231,43 @@
 			stream.client = new Object();
 			stream.client.onMetaData = function(obj) {
 				parameters.debug("AD: video size: width="+obj.width + ", height="+obj.height);
-				prepare_container(obj.width, obj.height);
+				
+				if (obj.width > (parameters.style.width - 60)) {
+					obj.width = parameters.style.width - 60;
+				}
+				var was_width:int = video.width; 
+				var scaleFactor:Number = video.width/was_width;
+				video.width = obj.width;
+				video.height = obj.height * scaleFactor;
+				
+				
+				prepare_container(obj.width, obj.height, true);
 				dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 				_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 			}
 			stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
-			var video:Video = new Video();
+			video = new Video();
 			video.attachNetStream(stream);
 			stream.play(_video_url);
 			addChild(video);
 			loaders.push(video);
 		}
-
+		
+		private function onSkipClickEmpty(event:MouseEvent):void 
+		{
+			event.stopPropagation();
+		}
+		
+		private function onSkipClick(event:MouseEvent):void
+		{
+			removeEventListener(MouseEvent.CLICK, _parent.onAdClick);
+			parameters.debug("AD: Skip button clicked in container");
+			clean_container();
+			sendEvent(AdriverEvent.SKIPPED);
+			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.SKIPPED));
+		}
+		
 		private function configureListeners(dispatcher:IEventDispatcher):void
 		{
 			dispatcher.addEventListener(Event.COMPLETE, completeHandler);

@@ -18,6 +18,7 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
+	import vkontakte.vk.ui.VKButton;
 
 	public class adriverLoader extends Sprite {
 		private const VERSION:String = "1.9";
@@ -29,7 +30,9 @@
 		private var parameters:Object;
 		private var obj:Object;
 		private var ad_cont:AdContainer;
-
+	
+		public var skip_button:DisplayObject;
+		
 		public function adriverLoader(mc:MovieClip, p:Object, url:String=''){
 			super();
 			parameters = p;
@@ -45,16 +48,25 @@
 
 		public function loadAd():void {
 			if (parameters.social_network == 'vkontakte') {
-
-				var vkontakte_wrapper: Object = Object(parent.parent.parent),
-					app;
-				try {
-					app = vkontakte_wrapper.application;
+				if (parameters.wrapper) {
+					parameters.debug("APP: get wrapper from params")
+					vkontakte_wrapper = parameters.wrapper;
+					if (vkontakte_wrapper.application) {
+						app = vkontakte_wrapper.application;
+					} else {
+						parameters.debug("APP: wrapper from params is wrong");
+					}
+				} else {
+					parameters.debug("APP: no wrapper in params")
+					var vkontakte_wrapper: Object = Object(parent.parent.parent),
+						app;
+					try {
+						app = vkontakte_wrapper.application;
+					}
+					catch(e){
+						app = false;
+					}
 				}
-				catch(e){
-					app = false;
-				}
-
 				if (app) {
 					parameters.debug("APP: App has vkontakte wrapper. test mode = " + parameters.api_test_mode);
 					parameters["vkontakte_hasWrapper"] = true;
@@ -64,11 +76,11 @@
 				else {
 					parameters.debug("APP: App has no vkontakte wrapper. test mode = " + parameters.api_test_mode);
 					parameters["vkontakte_hasWrapper"] = false;
-
-					parameters["flashVars"] = stage.loaderInfo.parameters as Object;
-
+					if (stage && stage.loaderInfo && stage.loaderInfo.parameters) {
+						parameters["flashVars"] = stage.loaderInfo.parameters as Object;
+					}
 					if (!parameters["flashVars"]["viewer_id"]) {
-						parameters["flashVars"]["viewer_id"] = "88984";
+						parameters["flashVars"]["viewer_id"] = "1";
 						parameters["flashVars"]["api_id"] = parameters.api_id;
 						parameters["flashVars"]["secret"] = parameters.api_secret;
 						parameters["flashVars"]["api_test_mode"] = parameters.api_test_mode;
@@ -186,6 +198,9 @@
 				this.addChild(ad_cont);
 
 				ad_cont.addEventListener(AdriverEvent.LOADED, sendPixels);
+
+                                ad_cont.buttonMode = true;
+                                ad_cont.useHandCursor = true;
 
 				if (video_url) {
 					ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
