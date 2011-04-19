@@ -134,19 +134,17 @@
 
 			if (skip_button) {
 				skip_button.removeEventListener(MouseEvent.CLICK, onSkipClick);
-				removeChild(skip_button);
+			}
+			
+			if (skip_button == true) {
+				parent.removeChild(skip_button);
 			}
 
 			isAdMount = false;
 		}
 		
-		private function prepare_container(aWidth:int, aHeight:int, iVideo=false):void
+		private function prepare_container(aWidth:int, aHeight:int):void
 		{
-			if (!iVideo){
-				this.width = aWidth;
-				this.height = aHeight;
-			}
-			
 			if (iSWF) {
 				var rect:Shape = new Shape(); 
 				rect.graphics.beginFill(0xFFFFFF); 
@@ -160,21 +158,17 @@
 
 				// can be commented out if you don't want vkbuttons
 				skip_button = new VKButton(parameters.skip_button_label);
-				skip_button.x = (aWidth + skip_button.width/2)/this.scaleX;
 				
-				//skip_button.x = aWidth - skip_button.width;
-				//skip_button.y = aHeight - skip_button.height;
+				skip_button.x = (aWidth + skip_button.width/2);
 
-				addChild(skip_button);
-				setChildIndex(skip_button, numChildren-1);
+				parent.addChild(skip_button);
+				parent.setChildIndex(skip_button, numChildren-1);
 			}
 			else if (typeof(parameters.skip_button) == "object") {
 				// our own skip button
 				parameters.debug("AD: using external Button");
 				skip_button = parameters.skip_button;
-				
-				trace("Csize", this.width, this.height)
-				
+								
 				skip_button.x = this.width/2 - skip_button.width/2;
 				skip_button.y = this.height + 10;
 				
@@ -207,11 +201,7 @@
 			}
 			
 			isAdMount = true;
-		}
-		
-		
-		
-		
+		}		
 		
 		public function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
 		{
@@ -239,13 +229,13 @@
 				if (obj.width > (parameters.style.width - 60)) {
 					obj.width = parameters.style.width - 60;
 				}
+				
 				var was_width:int = video.width; 
 				var scaleFactor:Number = video.width/was_width;
 				video.width = obj.width;
-				video.height = obj.height * scaleFactor;
+				video.height = obj.height * scaleFactor;				
 				
-				
-				prepare_container(obj.width, obj.height, true);
+				prepare_container(obj.width, obj.height);
 				dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 				_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 			}

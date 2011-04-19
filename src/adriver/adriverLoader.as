@@ -18,10 +18,9 @@
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
-	import vkontakte.vk.ui.VKButton;
 
 	public class adriverLoader extends Sprite {
-		private const VERSION:String = "1.95";
+		private const VERSION:String = "1.96";
 		private var ADRIVER_URL = "http://ad.adriver.ru/cgi-bin/xmerle.cgi?";
 
 		private const PREGAME:String = "pregame";
@@ -199,8 +198,8 @@
 
 				ad_cont.addEventListener(AdriverEvent.LOADED, sendPixels);
 
-                                ad_cont.buttonMode = true;
-                                ad_cont.useHandCursor = true;
+				ad_cont.buttonMode = true;
+				ad_cont.useHandCursor = true;
 
 				if (video_url) {
 					ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
