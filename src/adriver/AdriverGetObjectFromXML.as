@@ -88,7 +88,7 @@
 		
 		private function onXMLLoadError(event:Event):void 
 		{
-			_debug('error: ' + event + '\n location: ' + event.target.url);
+			_debug('error: ' + event);
 			dispatchEvent(new AdriverXMLEvent(AdriverXMLEvent.ERROR, event));
 		}
 		

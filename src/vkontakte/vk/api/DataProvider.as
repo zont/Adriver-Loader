@@ -179,9 +179,9 @@
 	function onVKAnswer(e:Event):void
 	{
         var loader:URLLoader = URLLoader(e.target);
-		trace('------------------------------------------------------------------');
-		trace('REQUEST COMPLETE: \n'+loader.data);
-		trace('------------------------------------------------------------------');
+//		trace('------------------------------------------------------------------');
+//		trace('REQUEST COMPLETE: \n'+loader.data);
+//		trace('------------------------------------------------------------------');
 		_mQueue.shift();
 		var data: Object = JSON.decode(loader.data);
         if (data.error) 
