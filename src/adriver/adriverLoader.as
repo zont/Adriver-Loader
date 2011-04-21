@@ -187,7 +187,6 @@
 			
 			// custom passing
 			parameters.eventUrl = obj.ar_event + (parameters.wholecustom || '') + "&type=";			
-			obj.ar_cgihref += parameters.wholecustom || '';
 
 			if (video_url || image_url || swf_url) {
 
