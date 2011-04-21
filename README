@@ -1,4 +1,4 @@
-Adriver-Loader (as3) version 1.95
+Adriver-Loader (as3) version 1.97
 https://github.com/randuev/Adriver-Loader/
 
 * supports:
@@ -92,10 +92,9 @@ https://github.com/randuev/Adriver-Loader/
         max_duration: 0,
 
         // if you want to capture clicks before they are passed to flash banner, set it to true
-        // default: false, which means let banner handle it's clicks
-        
-        catch_clicks: false,
-                        
+        // default: true, which means we don't let flash banners handle own clicks		
+        catch_clicks: true,
+
         // style parameters
         style: {
             width: stage.width,

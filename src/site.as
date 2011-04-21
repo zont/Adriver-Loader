@@ -24,7 +24,7 @@
 		private function onAddedToStage(e:Event):void 
 		{ 
 			init_debbuger();
-			var YOUR_SITE_ID_IN_ADRIVER:Number = 103134;
+			var YOUR_SITE_ID_IN_ADRIVER:Number = 170560;
 			
 			// user information must be provided if you want to target
 			var user_info:Object = {
@@ -103,8 +103,8 @@
 				max_duration: 0,
 
 				// if you want to capture clicks before they are passed to flash banner, set it to true
-				// default: false, which means let banner handle it's clicks		
-				catch_clicks: false,
+				// default: true, which means we don't let flash banners handle own clicks		
+				catch_clicks: true,
 
 				// style parameters
 				style: {
