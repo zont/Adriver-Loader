@@ -211,6 +211,7 @@
 						ad_cont.addEventListener(MouseEvent.CLICK, onAdClick);
 						ad_cont.mouseChildren = false;
 					}
+
 					parameters.debug("LOADER: Trying to add a swf: " + swf_url + '?link1=' + escape(obj.ar_cgihref));
 					ad_cont.loadBanner(swf_url + '?link1=' + escape(obj.ar_cgihref + '&rleurl='), 0, 0, true)
 				}
@@ -221,7 +222,7 @@
 			}
 		}
 
-		public function onAdClick(event:MouseEvent):void {
+		internal function onAdClick(event:MouseEvent):void {
 			parameters.debug("LOADER: Ad clicked in loader ");
 
 			if (ad_cont.isAdMount&&parameters.ad_type == PREGAME) {
@@ -231,12 +232,12 @@
 			this.dispatchEvent(new AdriverEvent(AdriverEvent.CLICKED));
 			obj.makeClick();
 		}
-		
+
 		private function sendPixels(event:AdriverEvent):void {
 			parameters.debug("LOADER: third party pixels");
 
 			var temp = function(e:Event):void {
-				trace(e + '\n');
+				parameters.debug("LOADER: unexpected IO_ERROR " + e);
 			}
 				
 			if(obj.pixel1) {

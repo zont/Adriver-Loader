@@ -30,7 +30,7 @@
 	// in parameters, supply an external real Button
 	import vkontakte.vk.ui.VKButton;
 
-	public class AdContainer extends MovieClip
+	internal class AdContainer extends MovieClip
 	{
 
 		private var shift = 60;
@@ -60,8 +60,8 @@
 
 		private var loaders:Object = [];
 		private var wnd:Sprite;
-		public var isAdMount:Boolean;
-		public var skip_button;
+		internal var isAdMount:Boolean;
+		internal var skip_button;
 		private var iSWF:Boolean = false;
 		private var video:Video;
 		private var loader:Loader;
@@ -113,7 +113,7 @@
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LIMITED));
 		}
 
-		public function clean_container():void
+		internal function clean_container():void
 		{
 			if(parameters.max_duration && parameters.max_duration > 0) {
 				duration_timer.removeEventListener(TimerEvent.TIMER, onTick);
@@ -203,7 +203,7 @@
 			isAdMount = true;
 		}		
 		
-		public function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
+		internal function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
 		{
 			iSWF = isSWF;
 			
@@ -329,7 +329,7 @@
 			//trace("unLoadHandler: " + event + "\n");
 		}
 
-		public function showVideo(url:String):void
+		internal function showVideo(url:String):void
 		{
 			_video_url = url;
 			connection = new NetConnection();

@@ -12,7 +12,7 @@
 	import flash.net.navigateToURL;
 	import flash.net.sendToURL;
 
-	public class AdriverGetObjectFromXML extends EventDispatcher {	
+	internal class AdriverGetObjectFromXML extends EventDispatcher {	
 		
 		private var _debug:Function;
 		
@@ -40,12 +40,12 @@
 			_debug = debug;
 		}
 		
-		public function repRnd(url:String):String 
+		private function repRnd(url:String):String 
 		{
 			return url.split('![rnd]').join('' + this.ar_rnd);
 		}
 		
-		public function makeClick(url:String=null):void 
+		internal function makeClick(url:String=null):void 
 		{
 			try {
 				_debug("XML: Processing click");
@@ -57,7 +57,7 @@
 			}
 		}
 		
-		public function sendEvent(stage:int):void 
+		private function sendEvent(stage:int):void 
 		{
   			if (this.ar_stages_trg[stage] == 0) {
    				this.ar_stages_trg[stage] = 1;
@@ -65,7 +65,7 @@
   			}
 		}
 		
-		public function sendPixel(u:String = null):void 
+		private function sendPixel(u:String = null):void 
 		{
 			if (!u) {
 				return;
