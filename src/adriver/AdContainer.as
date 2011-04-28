@@ -83,8 +83,8 @@
 
 		private function limit_duration():void
 		{
-			if (skip_button) {		 
-			    skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration+")";
+			if (skip_button && skip_button.hasOwnProperty("label")) {		 
+			    skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration + ")";
 			}
 
 			duration_timer = new Timer(1000, parameters.max_duration);
@@ -96,8 +96,8 @@
 		private function onTick(event:TimerEvent):void
 		{
 			var i:int = parameters.max_duration - event.target.currentCount;
-			if (skip_button) {
-			   	skip_button.label = parameters.skip_button_label + " (" + i+")";
+			if (skip_button && skip_button.hasOwnProperty("label")) {
+			   	skip_button.label = parameters.skip_button_label + " (" + i +")";
 			}		
 		}
 
@@ -115,7 +115,7 @@
 
 		internal function clean_container():void
 		{
-			if(parameters.max_duration && parameters.max_duration > 0) {
+			if(parameters.max_duration && parameters.max_duration > 0 && duration_timer) {
 				duration_timer.removeEventListener(TimerEvent.TIMER, onTick);
 				duration_timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onAdTimerComplete);
 			}
@@ -135,7 +135,7 @@
 			if (skip_button) {
 				skip_button.removeEventListener(MouseEvent.CLICK, onSkipClick);
 			}
-			
+
 			if (skip_button == true) {
 				parent.removeChild(skip_button);
 			}
@@ -153,35 +153,26 @@
 				loader.mask = rect;
 			}
 			
-			if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
-				parameters.debug("AD: making our own VKButton");
-
-				// can be commented out if you don't want vkbuttons
-				skip_button = new VKButton(parameters.skip_button_label);
+			if (parameters.skip_button != false) {
+				if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
+					parameters.debug("AD: making our own VKButton");
+					skip_button = new VKButton(parameters.skip_button_label);		
+				}
+				else if (typeof(parameters.skip_button) == "object") {
+					parameters.debug("AD: using external Button");
+					skip_button = parameters.skip_button;
+				}
 				
-				skip_button.x = (aWidth + skip_button.width/2);
-
-				parent.addChild(skip_button);
-				parent.setChildIndex(skip_button, numChildren-1);
-			}
-			else if (typeof(parameters.skip_button) == "object") {
-				// our own skip button
-				parameters.debug("AD: using external Button");
-				skip_button = parameters.skip_button;
-								
 				skip_button.x = this.width/2 - skip_button.width/2;
 				skip_button.y = this.height + 10;
-				
-				
+
 				if (skip_button.y > (parameters.style.height - skip_button.height - 10)) {
 					skip_button.y = parameters.style.height - skip_button.height - 10;
 				}
 				
-				addChild(skip_button);
-				setChildIndex(skip_button, numChildren-1);
-			}
-			
-			if (skip_button) {
+				parent.addChild(skip_button);
+				parent.setChildIndex(skip_button, numChildren-1);
+				
 				if (parameters.skip_button_timeout) {
 					parameters.debug("AD: skip button has timeout");
 					skip_button.enabled = false;
@@ -199,7 +190,7 @@
 			if (parameters.max_duration > 0) {
 				limit_duration();
 			}
-			
+
 			isAdMount = true;
 		}		
 		

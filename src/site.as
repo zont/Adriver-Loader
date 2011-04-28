@@ -31,9 +31,9 @@
 					// sex of user. 2 is male. 1 is female
 					// mandatory
 					sex: 2,
-					// birth date in "YYYY-MM-DD" format
+					// birth date in "DD.MM.YYYY" format
 					// mandatory
-					bdate: "1917-01-09",
+					bdate: "09.01.1917",
 					// unique user identificator
 					uid: 1,
 					// city name. lowercase
