@@ -33,7 +33,7 @@
 		public function adriverLoader(mc:MovieClip, p:Object, url:String=''){
 			super();
 			parameters = p;
-			parameters.debug = parameters.debug || function(s){trace(s)};
+			parameters.debug = parameters.debug || function(...params):void {};
 			parameters.adriver.custom = parameters.adriver.custom || {};
 			parameters.user = parameters.user || {};
 
