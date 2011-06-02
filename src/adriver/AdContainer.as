@@ -120,7 +120,7 @@
 				duration_timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onAdTimerComplete);
 			}
 
-			if (parameters.skip_button_timeout) {
+			if (skip_timer) {
 				skip_timer.removeEventListener(TimerEvent.TIMER, onSkipTimer);
 			}
 
