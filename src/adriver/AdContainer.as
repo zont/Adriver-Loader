@@ -268,10 +268,10 @@
 		{
 			if (parameters.eventUrl) {
 				var temp = function(e:Event):void {
-					trace(e + '\n');
+					//trace(e + '\n');
 				}
 				parameters.debug("AD: Logging adriver event: " +event);
-				trace(parameters.eventUrl+AdriverEvent.getEventID(event));
+				//trace(parameters.eventUrl+AdriverEvent.getEventID(event));
 				var request:URLRequest = new URLRequest(parameters.eventUrl+AdriverEvent.getEventID(event));
 				var loader:URLLoader = new URLLoader();
 				loader.addEventListener(IOErrorEvent.IO_ERROR, temp);
