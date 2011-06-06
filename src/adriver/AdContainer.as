@@ -166,12 +166,11 @@
 				skip_button.x = this.width/2 - skip_button.width/2;
 				skip_button.y = this.height + 10;
 
-				if (skip_button.y > (parameters.style.height - skip_button.height - 10)) {
-					skip_button.y = parameters.style.height - skip_button.height - 10;
+				if (skip_button.y > (parameters.style.height - skip_button.height - 20)) {
+					skip_button.y = parameters.style.height - skip_button.height - 20;
 				}
 				
 				parent.addChild(skip_button);
-				parent.setChildIndex(skip_button, numChildren-1);
 				
 				if (parameters.skip_button_timeout) {
 					parameters.debug("AD: skip button has timeout");
