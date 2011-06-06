@@ -108,8 +108,8 @@
 
 				// style parameters
 				style: {
-					width: stage.width,
-					height: stage.height
+					width: stage.stageWidth,
+					height: stage.stageHeight
 				},				
 				
 				// debug function
