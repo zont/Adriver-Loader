@@ -65,13 +65,13 @@
 		private var iSWF:Boolean = false;
 		private var video:Video;
 		private var loader:Loader;
-		
+
 		public function AdContainer(given_parameters:Object, mc)
 		{
 			super();
 			parameters = given_parameters;
 			_parent = mc;
-			
+
 			buttonMode = true;
 		}
 
@@ -83,7 +83,7 @@
 
 		private function limit_duration():void
 		{
-			if (skip_button && skip_button.hasOwnProperty("label")) {		 
+			if (skip_button && skip_button.hasOwnProperty("label")) {
 			    skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration + ")";
 			}
 
@@ -98,7 +98,7 @@
 			var i:int = parameters.max_duration - event.target.currentCount;
 			if (skip_button && skip_button.hasOwnProperty("label")) {
 			   	skip_button.label = parameters.skip_button_label + " (" + i +")";
-			}		
+			}
 		}
 
 		private function onAdTimerComplete(event:TimerEvent):void
@@ -142,43 +142,43 @@
 
 			isAdMount = false;
 		}
-		
+
 		private function prepare_container(aWidth:int, aHeight:int):void
 		{
 			if (iSWF) {
-				var rect:Shape = new Shape(); 
-				rect.graphics.beginFill(0xFFFFFF); 
-				rect.graphics.drawRect(0, 0, aWidth, aHeight); 
-				addChild(rect); 
+				var rect:Shape = new Shape();
+				rect.graphics.beginFill(0xFFFFFF);
+				rect.graphics.drawRect(0, 0, aWidth, aHeight);
+				addChild(rect);
 				loader.mask = rect;
 			}
-			
+
 			if (parameters.skip_button != false) {
 				if (typeof(parameters.skip_button) != "object" && (parameters.skip_button == true)) {
 					parameters.debug("AD: making our own VKButton");
-					skip_button = new VKButton(parameters.skip_button_label);		
+					skip_button = new VKButton(parameters.skip_button_label);
 				}
 				else if (typeof(parameters.skip_button) == "object") {
 					parameters.debug("AD: using external Button");
 					skip_button = parameters.skip_button;
 				}
-				
+
 				skip_button.x = this.width/2 - skip_button.width/2;
 				skip_button.y = this.height + 10;
 
 				if (skip_button.y > (parameters.style.height - skip_button.height - 20)) {
 					skip_button.y = parameters.style.height - skip_button.height - 20;
 				}
-				
+
 				parent.addChild(skip_button);
-				
+
 				if (parameters.skip_button_timeout) {
 					parameters.debug("AD: skip button has timeout");
 					skip_button.enabled = false;
 					skip_timer = new Timer(parameters.skip_button_timeout*1000, 1);
 					skip_timer.addEventListener(TimerEvent.TIMER, onSkipTimer);
 					skip_timer.start();
-					
+
 					skip_button.addEventListener(MouseEvent.CLICK, onSkipClickEmpty);
 				}
 				else{
@@ -191,15 +191,15 @@
 			}
 
 			isAdMount = true;
-		}		
-		
+		}
+
 		internal function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
 		{
 			iSWF = isSWF;
-			
+
 			parameters.debug("AD: Loading banner");
 			loader = new Loader();
-			
+
 			configureListeners(loader.contentLoaderInfo);
 			var request:URLRequest = new URLRequest(url);
 			loader.load(request);
@@ -237,12 +237,12 @@
 			addChild(video);
 			loaders.push(video);
 		}
-		
-		private function onSkipClickEmpty(event:MouseEvent):void 
+
+		private function onSkipClickEmpty(event:MouseEvent):void
 		{
 			event.stopPropagation();
 		}
-		
+
 		private function onSkipClick(event:MouseEvent):void
 		{
 			removeEventListener(MouseEvent.CLICK, _parent.onAdClick);
@@ -251,7 +251,7 @@
 			sendEvent(AdriverEvent.SKIPPED);
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.SKIPPED));
 		}
-		
+
 		private function configureListeners(dispatcher:IEventDispatcher):void
 		{
 			dispatcher.addEventListener(Event.COMPLETE, completeHandler);
