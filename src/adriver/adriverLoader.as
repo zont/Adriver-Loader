@@ -35,6 +35,7 @@
 			parameters = p;
 			parameters.debug = parameters.debug || function(...params):void {};
 			parameters.adriver.custom = parameters.adriver.custom || {};
+			parameters.style = parameters.style || {width: mc.stage.stageWidth, height: mc.stage.stageHeight};
 			parameters.user = parameters.user || {};
 
 			ADRIVER_URL = url || ADRIVER_URL;
