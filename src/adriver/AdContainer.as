@@ -209,25 +209,25 @@
 			this.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 		}
 
-		private function connectStream():void
-		{
+		private function connectStream():void {
 			stream = new NetStream(connection);
-			stream.client = new Object();
-			stream.client.onMetaData = function(obj) {
-				parameters.debug("AD: video size: width="+obj.width + ", height="+obj.height);
-				
-				if (obj.width > (parameters.style.width - 60)) {
-					obj.width = parameters.style.width - 60;
+			stream.client = {
+				onMetaData: function(obj) {
+					parameters.debug("AD: video size: width=" + video.width + ", height=" + video.height);
+
+					if (video.width > parameters.style.width) {
+						video.height *= parameters.style.width / video.width;
+						video.width = parameters.style.width;
+					}
+					if (video.height > parameters.style.height) {
+						video.width *= parameters.style.height / video.height;
+						video.height = parameters.style.height;
+					}
+
+					prepare_container(obj.width, obj.height);
+					dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
+					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 				}
-				
-				var was_width:int = video.width; 
-				var scaleFactor:Number = video.width/was_width;
-				video.width = obj.width;
-				video.height = obj.height * scaleFactor;				
-				
-				prepare_container(obj.width, obj.height);
-				dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
-				_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 			}
 			stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
@@ -291,9 +291,16 @@
 			//trace("httpStatusHandler: " + event + "\n");
 		}
 
-		private function initHandler(event:Event):void
-		{
+		private function initHandler(event:Event):void {
 			//trace("initHandler: " + event + "\n");
+			if (width > parameters.style.width) {
+				height *= parameters.style.width / width;
+				width = parameters.style.width;
+			}
+			if (height > parameters.style.height) {
+				width *= parameters.style.height / height;
+				height = parameters.style.height;
+			}
 		}
 
 		private function ioErrorHandler(event:IOErrorEvent):void
