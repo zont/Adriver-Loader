@@ -1,5 +1,4 @@
-﻿package adriver
-{
+﻿package adriver {
 	import adriver.events.AdriverEvent;
 
 	import flash.display.DisplayObject;
@@ -30,8 +29,7 @@
 	// in parameters, supply an external real Button
 	import vkontakte.vk.ui.VKButton;
 
-	internal class AdContainer extends MovieClip
-	{
+	internal class AdContainer extends MovieClip {
 
 		private var shift = 60;
 		private var defW = 128;
@@ -66,8 +64,7 @@
 		private var video:Video;
 		private var loader:Loader;
 
-		public function AdContainer(given_parameters:Object, mc)
-		{
+		public function AdContainer(given_parameters:Object, mc) {
 			super();
 			parameters = given_parameters;
 			_parent = mc;
@@ -81,8 +78,7 @@
 			skip_button.enabled = true;
 		}
 
-		private function limit_duration():void
-		{
+		private function limit_duration():void {
 			if (skip_button && skip_button.hasOwnProperty("label")) {
 			    skip_button.label = parameters.skip_button_label + " (" + parameters.max_duration + ")";
 			}
@@ -93,16 +89,14 @@
 			duration_timer.start();
 		}
 
-		private function onTick(event:TimerEvent):void
-		{
+		private function onTick(event:TimerEvent):void {
 			var i:int = parameters.max_duration - event.target.currentCount;
 			if (skip_button && skip_button.hasOwnProperty("label")) {
 			   	skip_button.label = parameters.skip_button_label + " (" + i +")";
 			}
 		}
 
-		private function onAdTimerComplete(event:TimerEvent):void
-		{
+		private function onAdTimerComplete(event:TimerEvent):void {
 			if (stream) {
 				stream.close();
 			}
@@ -113,9 +107,8 @@
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LIMITED));
 		}
 
-		internal function clean_container():void
-		{
-			if(parameters.max_duration && parameters.max_duration > 0 && duration_timer) {
+		internal function clean_container():void {
+			if (parameters.max_duration && parameters.max_duration > 0 && duration_timer) {
 				duration_timer.removeEventListener(TimerEvent.TIMER, onTick);
 				duration_timer.removeEventListener(TimerEvent.TIMER_COMPLETE, onAdTimerComplete);
 			}
@@ -134,17 +127,13 @@
 
 			if (skip_button) {
 				skip_button.removeEventListener(MouseEvent.CLICK, onSkipClick);
-			}
-
-			if (skip_button == true) {
 				parent.removeChild(skip_button);
 			}
 
 			isAdMount = false;
 		}
 
-		private function prepare_container(aWidth:int, aHeight:int):void
-		{
+		private function prepare_container(aWidth:int, aHeight:int):void {
 			if (iSWF) {
 				var rect:Shape = new Shape();
 				rect.graphics.beginFill(0xFFFFFF);
@@ -165,6 +154,7 @@
 
 				skip_button.x = this.width/2 - skip_button.width/2;
 				skip_button.y = this.height + 10;
+
 
 				if (skip_button.y > (parameters.style.height - skip_button.height - 20)) {
 					skip_button.y = parameters.style.height - skip_button.height - 20;
@@ -193,8 +183,7 @@
 			isAdMount = true;
 		}
 
-		internal function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void
-		{
+		internal function loadBanner(url:String, x:int, y:int, isSWF:Boolean=false):void {
 			iSWF = isSWF;
 
 			parameters.debug("AD: Loading banner");
@@ -213,6 +202,8 @@
 			stream = new NetStream(connection);
 			stream.client = {
 				onMetaData: function(obj) {
+					video.width = obj.width;
+					video.height = obj.height;
 					parameters.debug("AD: video size: width=" + video.width + ", height=" + video.height);
 
 					if (video.width > parameters.style.width) {
@@ -224,7 +215,7 @@
 						video.height = parameters.style.height;
 					}
 
-					prepare_container(obj.width, obj.height);
+					prepare_container(video.width, video.height);
 					dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 				}
@@ -238,13 +229,11 @@
 			loaders.push(video);
 		}
 
-		private function onSkipClickEmpty(event:MouseEvent):void
-		{
+		private function onSkipClickEmpty(event:MouseEvent):void {
 			event.stopPropagation();
 		}
 
-		private function onSkipClick(event:MouseEvent):void
-		{
+		private function onSkipClick(event:MouseEvent):void {
 			removeEventListener(MouseEvent.CLICK, _parent.onAdClick);
 			parameters.debug("AD: Skip button clicked in container");
 			clean_container();
@@ -252,8 +241,7 @@
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.SKIPPED));
 		}
 
-		private function configureListeners(dispatcher:IEventDispatcher):void
-		{
+		private function configureListeners(dispatcher:IEventDispatcher):void {
 			dispatcher.addEventListener(Event.COMPLETE, completeHandler);
 			dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			dispatcher.addEventListener(Event.INIT, initHandler);
@@ -263,8 +251,7 @@
 			dispatcher.addEventListener(Event.UNLOAD, unLoadHandler);
 		}
 
-		private function sendEvent(event:String):void
-		{
+		private function sendEvent(event:String):void {
 			if (parameters.eventUrl) {
 				var temp = function(e:Event):void {
 					//trace(e + '\n');
@@ -279,15 +266,13 @@
 			}
 		}
 
-		private function completeHandler(event:Event):void
-		{
+		private function completeHandler(event:Event):void {
 			//trace("completeHandler: " + event + "\n");
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.LOADED));
 			prepare_container(event.target.width, event.target.height);
 		}
 
-		private function httpStatusHandler(event:HTTPStatusEvent):void
-		{
+		private function httpStatusHandler(event:HTTPStatusEvent):void {
 			//trace("httpStatusHandler: " + event + "\n");
 		}
 
@@ -303,31 +288,26 @@
 			}
 		}
 
-		private function ioErrorHandler(event:IOErrorEvent):void
-		{
+		private function ioErrorHandler(event:IOErrorEvent):void {
 			//trace("ioErrorHandler: " + event + "\n");
 			clean_container();
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.FAILED));
 		}
 
-		private function openHandler(event:Event):void
-		{
+		private function openHandler(event:Event):void {
 			//trace("openHandler: " + event + "\n");
 		}
 
-		private function progressHandler(event:ProgressEvent):void
-		{
+		private function progressHandler(event:ProgressEvent):void {
 			//trace("progressHandler: bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal + "\n");
 			_parent.dispatchEvent(new AdriverEvent(AdriverEvent.PROGRESS));
 		}
 
-		private function unLoadHandler(event:Event):void
-		{
+		private function unLoadHandler(event:Event):void {
 			//trace("unLoadHandler: " + event + "\n");
 		}
 
-		internal function showVideo(url:String):void
-		{
+		internal function showVideo(url:String):void {
 			_video_url = url;
 			connection = new NetConnection();
 			connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
@@ -335,8 +315,7 @@
 			connection.connect(null);
 		}
 
-		private function netStatusHandler(event:NetStatusEvent):void
-		{
+		private function netStatusHandler(event:NetStatusEvent):void {
 			parameters.debug("AD: ..net event: "+event.info.code);
 
 			switch (event.info.code) {
@@ -361,10 +340,6 @@
 					parameters.debug("AD: Play finished: " + _video_url);
 					sendEvent(AdriverEvent.FINISHED);
 					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.FINISHED));
-//				default:
-//					parameters.debug("AD: Play failed. Unknown event: " + event.info.code)
-//					sendEvent(AdriverEvent.FAILED);
-//					_parent.dispatchEvent(new AdriverEvent(AdriverEvent.FAILED));
 			}
 		}
 
